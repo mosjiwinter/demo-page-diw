@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เลือก/เปลี่ยน Juristic และดูข้อมูลโรงงาน</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .user-info, .juristic-selection, .factory-list {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        h2 {
+            color: #ffa200;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        h3 {
+            color: #333;
+            font-size: 1.2em;
+        }
+        p {
+            margin: 8px 0;
+        }
+        button {
+            background-color: #6eda78;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4b9e5d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="user-info" id="user-info">
+            <h2>ข้อมูลผู้ใช้</h2>
+            <p id="user-name"></p>
+            <p id="user-phone"></p>
+            <p id="user-email"></p>
+            <p id="user-reg-date"></p>
+        </div>
+
+        <div class="juristic-selection" id="juristic-selection">
+            <h2>เลือก/เปลี่ยน Juristic</h2>
+            <div class="juristic-option" id="juristic-option">
+                <h3 id="juristic-name-th"></h3>
+                <p id="juristic-name-en"></p>
+                <button onclick="setCurrentJuristic()">ตั้งค่าเป็นปัจจุบัน</button>
+            </div>
+        </div>
+
+        <div class="factory-list" id="factory-list">
+            <h2>รายชื่อโรงงาน</h2>
+            <ul id="factory-items"></ul>
+        </div>
+    </div>
+
+    <script>
+        // ตัวอย่างข้อมูล JSON จาก API
+        const apiResponse = {
+            "citizen_id": "3520800275250",
+            "status": "true",
+            "userCode": "32055",
+            "userFirstName": "ยงยุทธ์",
+            "userLastName": "มณีวงค์",
+            "userPhone": "0854886601",
+            "userEmail": "admin@seikoadvance.co.th",
+            "userRegisDate": "16/12/2021 15:21:02",
+            "juristic": "[{\"JuristicID\":\"0105533052584\",\"JuristicNameTh\":\"เซโค แอดวานซ์ (ประเทศไทย) จำกัด\",\"JuristicNameEn\":\"SEIKO ADVANCE (THAILAND) LIMITED\",\"JuristicType\":\"\",\"FactoryList\":[{\"FID\":\"72030000125377\",\"CODE\":\"น.48(6)-1/2537-ญนล.\",\"FNAME\":\"บริษัท เซโค แอดวานซ์ (ประเทศไทย) จำกัด\"}]}]"
+        };
+
+        // ฟังก์ชันเพื่อแสดงข้อมูลผู้ใช้
+        function displayUserInfo() {
+            document.getElementById("user-name").innerText = `ชื่อ-นามสกุล: ${apiResponse.userFirstName} ${apiResponse.userLastName}`;
+            document.getElementById("user-phone").innerText = `โทรศัพท์: ${apiResponse.userPhone}`;
+            document.getElementById("user-email").innerText = `อีเมล: ${apiResponse.userEmail}`;
+            document.getElementById("user-reg-date").innerText = `ลงทะเบียนเมื่อ: ${apiResponse.userRegisDate}`;
+        }
+
+        // ฟังก์ชันเพื่อแสดงข้อมูล Juristic
+        function displayJuristicInfo() {
+            const juristic = JSON.parse(apiResponse.juristic)[0];
+            document.getElementById("juristic-name-th").innerText = juristic.JuristicNameTh;
+            document.getElementById("juristic-name-en").innerText = juristic.JuristicNameEn;
+
+            // แสดงรายชื่อโรงงาน
+            const factoryList = juristic.FactoryList;
+            const factoryItems = document.getElementById("factory-items");
+            factoryList.forEach(factory => {
+                const li = document.createElement("li");
+                li.innerHTML = `<p>Factory ID: ${factory.FID}</p>
+                                <p>Code: ${factory.CODE}</p>
+                                <p>ชื่อโรงงาน: ${factory.FNAME}</p>`;
+                factoryItems.appendChild(li);
+            });
+        }
+
+        // ฟังก์ชันการตั้งค่า Juristic เป็นปัจจุบัน
+        function setCurrentJuristic() {
+            alert("ตั้งค่า Juristic เป็นปัจจุบันแล้ว!");
+        }
+
+        // เรียกใช้งานฟังก์ชันเมื่อโหลดหน้า
+        displayUserInfo();
+        displayJuristicInfo();
+    </script>
+</body>
+</html>

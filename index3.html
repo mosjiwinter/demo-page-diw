@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juristic Selection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        .user-info, .juristic-selection, .factory-list {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        h2 {
+            color: #ffa200;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        p {
+            margin: 8px 0;
+        }
+        .juristic-option {
+            margin-bottom: 15px;
+        }
+        button {
+            background-color: #6eda78;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4b9e5d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- User Information Section -->
+        <div class="user-info">
+            <h2>ข้อมูลผู้ใช้</h2>
+            <p id="user-name"></p>
+            <p id="user-phone"></p>
+            <p id="user-email"></p>
+            <p id="user-regis-date"></p>
+        </div>
+
+        <!-- Juristic Selection Section -->
+        <div class="juristic-selection">
+            <h2>เลือก/เปลี่ยน Juristic</h2>
+            <div id="juristic-options"></div>
+        </div>
+    </div>
+
+    <script>
+        // Sample API response with multiple juristics and factories
+        const apiResponse = {
+            "citizen_id": "3520800275250",
+            "status": "true",
+            "userCode": "32055",
+            "userFirstName": "ยงยุทธ์",
+            "userLastName": "มณีวงค์",
+            "userPhone": "0854886601",
+            "userEmail": "admin@seikoadvance.co.th",
+            "userRegisDate": "16/12/2021 15:21:02",
+            "juristic": "[{\"JuristicID\":\"0105533052584\",\"JuristicNameTh\":\"เซโค แอดวานซ์ (ประเทศไทย) จำกัด\",\"JuristicNameEn\":\"SEIKO ADVANCE (THAILAND) LIMITED\",\"JuristicType\":\"\",\"FactoryList\":[{\"FID\":\"72030000125377\",\"CODE\":\"น.48(6)-1/2537-ญนล.\",\"FNAME\":\"บริษัท เซโค แอดวานซ์ (ประเทศไทย) จำกัด\"}]}, {\"JuristicID\":\"0105533052585\",\"JuristicNameTh\":\"บริษัท เอสซีจี จำกัด\",\"JuristicNameEn\":\"SCG LIMITED\",\"JuristicType\":\"\",\"FactoryList\":[{\"FID\":\"72030000125378\",\"CODE\":\"น.48(6)-2/2537-ญนล.\",\"FNAME\":\"โรงงาน เอสซีจี\"}, {\"FID\":\"72030000125379\",\"CODE\":\"น.48(6)-3/2537-ญนล.\",\"FNAME\":\"โรงงาน เอสซีจี สาขา 2\"}]}]"
+        };
+
+        // Parse the juristic data
+        const juristicData = JSON.parse(apiResponse.juristic);
+
+        // Populate user information
+        document.getElementById("user-name").innerText = `ชื่อ-นามสกุล: ${apiResponse.userFirstName} ${apiResponse.userLastName}`;
+        document.getElementById("user-phone").innerText = `โทรศัพท์: ${apiResponse.userPhone}`;
+        document.getElementById("user-email").innerText = `อีเมล: ${apiResponse.userEmail}`;
+        document.getElementById("user-regis-date").innerText = `ลงทะเบียนเมื่อ: ${apiResponse.userRegisDate}`;
+
+        // Populate juristic information
+        const juristicOptions = document.getElementById("juristic-options");
+        juristicData.forEach((juristic, index) => {
+            // Create a div for each juristic option
+            const juristicDiv = document.createElement("div");
+            juristicDiv.className = "juristic-option";
+
+            // Display juristic name and button
+            juristicDiv.innerHTML = `
+                <h3>${juristic.JuristicNameTh}</h3>
+                <p>${juristic.JuristicNameEn}</p>
+                <button onclick="setCurrentJuristic('${juristic.JuristicNameTh}')">ตั้งค่าเป็นปัจจุบัน</button>
+            `;
+
+            // Create factory list
+            const factoryList = document.createElement("ul");
+            juristic.FactoryList.forEach(factory => {
+                const factoryItem = document.createElement("li");
+                factoryItem.innerHTML = `
+                    <p>Factory ID: ${factory.FID}</p>
+                    <p>Code: ${factory.CODE}</p>
+                    <p>ชื่อโรงงาน: ${factory.FNAME}</p>
+                `;
+                factoryList.appendChild(factoryItem);
+            });
+
+            juristicDiv.appendChild(factoryList);
+            juristicOptions.appendChild(juristicDiv);
+        });
+
+        // Function to set current juristic
+        function setCurrentJuristic(juristicName) {
+            alert(`ตั้งค่า Juristic เป็น ${juristicName}`);
+            // Implement setting of the current juristic if necessary
+        }
+    </script>
+</body>
+</html>
